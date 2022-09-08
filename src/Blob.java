@@ -19,13 +19,19 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 	 
 	public class Blob {
-		public Blob(String filePath) throws IOException, FileNotFoundException, NoSuchAlgorithmException
+		public Blob(String fileName) throws IOException, FileNotFoundException, NoSuchAlgorithmException
 		{
 			
-			String nameOfFile = sha1Code(filePath);
+			/*
+			 * takes in file name and makes a file with the sha1code as the name
+			 */
+			String nameOfFile = sha1Code(fileName);
 			File tester = new File (nameOfFile);
 			
-			BufferedReader read = new BufferedReader (new FileReader(filePath));
+			/*
+			 * takes all the content in the file and puts it into new file
+			 */
+			BufferedReader read = new BufferedReader (new FileReader(fileName));
 			String contentOfFile = "";
 			while (read.ready())
 			{
@@ -42,13 +48,17 @@ import java.io.PrintWriter;
 	    	}
 		}
 		
+
+		/*
+		 * creates the sha1 code
+		 */
 		
 		public static String readFile(String path, Charset encoding) throws IOException
 	    {
 	        byte[] encoded = Files.readAllBytes(Paths.get(path));
 	        return new String(encoded, encoding);
 	    }
-		
+	    
 		
 	    public String sha1Code(String filePath) throws IOException, NoSuchAlgorithmException {
 	        FileInputStream fileInputStream = new FileInputStream(filePath);
@@ -72,15 +82,18 @@ import java.io.PrintWriter;
 	                // one character, so we need to append a character of '0'
 	                sb.append("0");
 	            }
-	            sb.append(Integer.toHexString(value).toUpperCase());
+	            sb.append(Integer.toHexString(value));
 	        }
 	        return sb.toString();
 	    }
+	    
+	    /*
+	     * end of creating sha1 code
+	     */
 		
 	    public static void main (String [] args) throws FileNotFoundException, NoSuchAlgorithmException, IOException
-	    {
+	    { 
 	    	Blob blob1 = new Blob ("Eliza.txt");
-	    	
 	    }
 	    
 	}
