@@ -100,7 +100,61 @@ private HashMap<String, String> hash;
         }
     }
 	
-	
+	public void removeBlobs (String fileName)
+	{
+		if (hash.containsKey(fileName))
+		{
+			hash.remove(fileName);
+		}
+		
+		/*
+		 * clears the whole file
+		 */
+		 FileWriter fwOb = new FileWriter("index.txt", false); 
+	        PrintWriter pwOb = new PrintWriter(fwOb, false);
+	        pwOb.flush();
+	        pwOb.close();
+	        fwOb.close();
+		/*
+		 * takes content of current hashmap and adds it to file
+		 * 
+		 */  
+        BufferedWriter bf = null;
+  
+        try {
+  
+            // create new BufferedWriter for the output file
+            bf = new BufferedWriter(new FileWriter("index.txt"));
+  
+            // iterate map entries
+            for (Map.Entry<String, String> entry :
+                 hash.entrySet()) {
+  
+                // put key and value separated by a colon
+                bf.write(entry.getKey() + ":"
+                         + entry.getValue());
+  
+                // new line
+                bf.newLine();
+            }
+  
+            bf.flush();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+  
+            try {
+  
+                // always close the writer
+                bf.close();
+            }
+            catch (Exception e) {
+            }
+        }
+		
+	}
 	public static void main (String [] args) throws FileNotFoundException, NoSuchAlgorithmException, IOException
 	{
 		Index test1 = new Index();
