@@ -100,7 +100,7 @@ private HashMap<String, String> hash;
         }
     }
 	
-	public void removeBlobs (String fileName)
+	public void removeBlobs (String fileName) throws IOException
 	{
 		if (hash.containsKey(fileName))
 		{
@@ -160,5 +160,6 @@ private HashMap<String, String> hash;
 		Index test1 = new Index();
 		test1.addBlobs("Amelia.txt");
 		test1.addBlobs("Ava.txt");
+		test1.removeBlobs("Amelia.txt");
 	}
 }
