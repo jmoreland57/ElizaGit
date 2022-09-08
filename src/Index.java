@@ -63,8 +63,7 @@ private HashMap<String, String> hash;
 		/*
 		 * takes content of current hashmap and adds it to file
 		 * 
-		 */
-		  
+		 */  
         BufferedWriter bf = null;
   
         try {
@@ -102,9 +101,10 @@ private HashMap<String, String> hash;
     }
 	
 	
-	public static void main (String [] args)
+	public static void main (String [] args) throws FileNotFoundException, NoSuchAlgorithmException, IOException
 	{
 		Index test1 = new Index();
-		
+		test1.addBlobs("Amelia.txt");
+		test1.addBlobs("Ava.txt");
 	}
 }
