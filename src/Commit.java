@@ -150,6 +150,7 @@ private Commit oth;
 	{
 		Path filePath = Paths.get(fileName);
 		String content = Files.readString(filePath);
+		System.out.println (content);
 		return content;
 	}
 	
@@ -188,7 +189,7 @@ private Commit oth;
 		Commit test1 = new Commit ("hey everyone", "summary", "Eliza Koblentz", null);
 		//Commit test2 = new Commit ("live laugh love", "summary", "Amelia Koblentz", test1);
 		
-		test1.
+		test1.readFile("temporary.txt");
 	}
 	
 }
