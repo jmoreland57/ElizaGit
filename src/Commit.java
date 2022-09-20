@@ -1,3 +1,7 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -11,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
+import java.util.Scanner;
 
 public class Commit {
 private String pTree;
@@ -30,14 +35,12 @@ private Commit oth;
 		
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
 		LocalDateTime now = LocalDateTime.now();  
-		d = dtf.format(now); 
-		System.out.println (d);
+		d = dtf.format(now);
 		
 		par = parent;
 		oth = null;
 		
 		writeToFile();
-		changeParent();
 	}
 	
 	public String generateSha1(String input)
@@ -58,6 +61,7 @@ private Commit oth;
 	    {
 	        e.printStackTrace();
 	    }
+	    System.out.println (sha1);
 	    return sha1;
 	}
 
@@ -111,9 +115,54 @@ private Commit oth;
         }
         
 	}
-	
+/*	
 	public void changeParent () throws IOException
 	{
+		 try {
+		        // input the (modified) file content to the StringBuffer "input"
+		        BufferedReader file = new BufferedReader(new FileReader("temporary.txt"));
+		        StringBuffer inputBuffer = new StringBuffer();
+		        String line;
+
+		        while ((line = file.readLine()) != null) {
+		            line = ""; // replace the line here
+		            inputBuffer.append(line);
+		            inputBuffer.append('\n');
+		        }
+		        file.close();
+
+		        // write the new string with the replaced line OVER the same file
+		        FileOutputStream fileOut = new FileOutputStream("notes.txt");
+		        fileOut.write(inputBuffer.toString().getBytes());
+		        fileOut.close();
+
+		    } catch (Exception e) {
+		        System.out.println("Problem reading file.");
+		    }
+		 
+		 /*
+		  * read a file to a string
+		  * replace the third line of the string with ""
+		  * put that string into a file
+		  */
+	
+	public String readFile (String fileName) throws IOException
+	{
+		Path filePath = Paths.get(fileName);
+		String content = Files.readString(filePath);
+		return content;
+	}
+	
+	public String replaceThirdLine (String content)
+	{
+		return "hi";
+	}
+	
+	public String putInFile (String newContent)
+	{
+		return "hey";
+	}
+		/*
 		if (par != null)
 		{
 			String filePath = "objects/" + generateSha1(getContentOfFile());
@@ -129,15 +178,17 @@ private Commit oth;
 	{
 	    Path path = Paths.get(fileName);
 	    ArrayList<String> lines = (ArrayList<String>)Files.readAllLines(path, StandardCharsets.UTF_8);
-	    lines.set(lineNumber - 1, data);
+	    //lines.set(lineNumber-1, data);
 	    Files.write(path, lines, StandardCharsets.UTF_8);
 	}
+	*/
 
 	public static void main (String [] args) throws IOException
 	{
 		Commit test1 = new Commit ("hey everyone", "summary", "Eliza Koblentz", null);
-		Commit test2 = new Commit ("live laugh love", "summary", "Amelia Koblentz", test1);
+		//Commit test2 = new Commit ("live laugh love", "summary", "Amelia Koblentz", test1);
 		
+		test1.
 	}
 	
 }
