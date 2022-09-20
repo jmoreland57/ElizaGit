@@ -161,5 +161,6 @@ private HashMap<String, String> hash;
 		test1.addBlobs("Amelia.txt");
 		test1.addBlobs("Ava.txt");
 		test1.removeBlobs("Amelia.txt");
+		test1.removeBlobs("Ava.txt");
 	}
 }
