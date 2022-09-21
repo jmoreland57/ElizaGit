@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ private String pTree;
 
 public String sum;
 public String auth;
-public String d;
+public LocalDate d;
 
 private Commit par;
 private Commit oth;
@@ -33,14 +34,18 @@ private Commit oth;
 		sum = summary;
 		auth = author;
 		
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
-		LocalDateTime now = LocalDateTime.now();  
-		d = dtf.format(now);
+		d = getDate();
 		
 		par = parent;
 		oth = null;
 		
 		writeToFile();
+	}
+	
+	public LocalDate getDate()
+	{
+		LocalDate d = java.time.LocalDate.now();
+		return d;
 	}
 	
 	public String generateSha1(String input)
@@ -61,7 +66,6 @@ private Commit oth;
 	    {
 	        e.printStackTrace();
 	    }
-	    System.out.println (sha1);
 	    return sha1;
 	}
 
@@ -80,15 +84,16 @@ private Commit oth;
 	public String getContentOfFile()
 	{
 		String content = "";
-		content += ("objects/" + pTree + "\n");
+		content += ("objects/" + pTree);
 		if (par != null)
 		{
-			content += ("objects/" + par.generateSha1(par.getContentOfFile()) + "\n");
+			content += ("\nobjects/" + par.generateSha1(par.getContentOfFile()) + "\n");
 		}
 		else
 		{
 			content += "\n";
 		}
+		
 		if (oth != null)
 		{
 			content += ("objects/" + oth.generateSha1(par.getContentOfFile()) + "\n");
@@ -98,8 +103,9 @@ private Commit oth;
 			content += "\n";
 		}
 		
-		content += auth;
-		content += d;
+		content += auth+"\n";
+		content += d +"\n";
+		content +=sum + "\n";
 		content += "This commit is amazing!";
 		
 		return content;
@@ -115,30 +121,6 @@ private Commit oth;
         }
         
 	}
-/*	
-	public void changeParent () throws IOException
-	{
-		 try {
-		        // input the (modified) file content to the StringBuffer "input"
-		        BufferedReader file = new BufferedReader(new FileReader("temporary.txt"));
-		        StringBuffer inputBuffer = new StringBuffer();
-		        String line;
-
-		        while ((line = file.readLine()) != null) {
-		            line = ""; // replace the line here
-		            inputBuffer.append(line);
-		            inputBuffer.append('\n');
-		        }
-		        file.close();
-
-		        // write the new string with the replaced line OVER the same file
-		        FileOutputStream fileOut = new FileOutputStream("notes.txt");
-		        fileOut.write(inputBuffer.toString().getBytes());
-		        fileOut.close();
-
-		    } catch (Exception e) {
-		        System.out.println("Problem reading file.");
-		    }
 		 
 		 /*
 		  * read a file to a string
@@ -156,7 +138,25 @@ private Commit oth;
 	
 	public String replaceThirdLine (String content)
 	{
-		return "hi";
+		int first = 0;
+		int second = content.indexOf("\n");
+		String temp = "";
+		for (int pos = content.indexOf("\n"); pos != -1; pos = content.indexOf("\n", pos + 1)) 
+		{
+			  second = pos;
+			  if (content.substring(first, second).equals("\n"+auth))
+			  {
+				  temp += "\n";
+				  first = second;
+			  }
+			  else
+			  {
+				  temp += content.substring(first, second);
+				  first = second;
+			  }
+		}
+		content = temp;
+		return content;
 	}
 	
 	public String putInFile (String newContent)
@@ -186,10 +186,13 @@ private Commit oth;
 
 	public static void main (String [] args) throws IOException
 	{
-		Commit test1 = new Commit ("hey everyone", "summary", "Eliza Koblentz", null);
-		//Commit test2 = new Commit ("live laugh love", "summary", "Amelia Koblentz", test1);
+		Commit test1 = new Commit ("summary", "author", "Eliza Koblentz", null);
+		Commit test2 = new Commit ("summary", "author", "Amelia Koblentz", test1);
 		
-		test1.readFile("temporary.txt");
+		//test1.readFile("temporary.txt");
+		System.out.println (test2.getContentOfFile());
+		//String read = "Hey there\nMy name is Eliza\nI am a computer\n";
+		//System.out.println(test1.replaceThirdLine(read));
 	}
 	
 }
