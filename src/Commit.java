@@ -27,7 +27,8 @@ public String auth;
 public LocalDate d;
 
 private Commit par;
-private Commit oth;
+private String oth;
+String s;
 
 	public Commit(String summary, String author, String pTree, Commit parent) throws IOException, NoSuchAlgorithmException
 	{
@@ -40,17 +41,14 @@ private Commit oth;
 		par = parent;
 		oth = null;
 		
+		s = generateSha1(getContentOfFile());
+		
 		writeToFile();
-		/*
 		if (par !=null || oth != null)
 		{
 			String sha = par.generateSha1(par.getContentOfFile());
-			System.out.println (sha);
-			readFile(sha);
-			
+			changeContents(sha);
 		}
-		*/	
-		
 	}
 	
 	public LocalDate getDate()
@@ -58,6 +56,12 @@ private Commit oth;
 		LocalDate d = java.time.LocalDate.now();
 		return d;
 	}
+	
+	public void setCurrentToChildOfParent()
+	{
+		par.oth = s;
+	}
+	
 	 public String generateSha1(String input)
 	            throws NoSuchAlgorithmException, UnsupportedEncodingException
 	        {
@@ -73,48 +77,7 @@ private Commit oth;
 	            }
 	            return hexStr;
 	        }
-	/*
-	public String generateSha1(String input)
-	{
-		if (input == null)
-		{
-			String sha1 = "";
-		    try
-		    {
-		        MessageDigest crypt = MessageDigest.getInstance("SHA-1");
-		        crypt.reset();
-		        crypt.update(input.getBytes("UTF-8"));
-		        sha1 = byteToHex(crypt.digest());
-		    }
-		    catch(NoSuchAlgorithmException e)
-		    {
-		        e.printStackTrace();
-		    }
-		    catch(UnsupportedEncodingException e)
-		    {
-		        e.printStackTrace();
-		    }
-		    return sha1;
-		}
-		else
-		{
-			return "";
-		}
-		
-	}
-
-	private static String byteToHex(final byte[] hash)
-	{
-	    Formatter formatter = new Formatter();
-	    for (byte b : hash)
-	    {
-	        formatter.format("%02x", b);
-	    }
-	    String result = formatter.toString();
-	    formatter.close();
-	    return result;
-	}
-*/
+	
 	public String getContentOfFile() throws NoSuchAlgorithmException, UnsupportedEncodingException
 	{
 		String content = "";
@@ -130,7 +93,7 @@ private Commit oth;
 			
 		if (oth != null)
 		{
-			content += ("objects/" + oth.generateSha1(par.getContentOfFile()) + "\n");
+			content += ("objects/" + s + "\n");
 		}
 		else
 		{
@@ -142,132 +105,69 @@ private Commit oth;
 		content +=sum + "\n";
 
 		return content;
-		
 	}
 	
 	public void writeToFile() throws NoSuchAlgorithmException, UnsupportedEncodingException
 	{
 		String sha = generateSha1(getContentOfFile());
-		//System.out.println ("this is content" + sha);
-        Path p = Paths.get(sha);
-       // System.out.println (p.toAbsolutePath());
+        Path p = Paths.get("objects/" + sha);
         
         try {
             Files.writeString(p, getContentOfFile(), StandardCharsets.ISO_8859_1);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }
-        
-	}
-	/*		
-	public void changeParent() throws IOException
-	{
-		if (par != null)
-		{
-			String spot = "objects/" + generateSha1(getContentOfFile());
-			setVariable(3, spot, ("objects/" + par.generateSha1(par.getContentOfFile())));
-		}
-		else
-		{
-			return;
-		}
+        } 
 	}
 	
-	public static void setVariable(int lineNumber, String data, String nameOfFile) throws IOException {
-	    Path path = Paths.get(nameOfFile);
-	    ArrayList<String> lines = (ArrayList<String>)Files.readAllLines(path, StandardCharsets.UTF_8);
-	    lines.set(lineNumber-3, data);
-	    Files.write(path, lines, StandardCharsets.UTF_8);
-	}
-		*/ 
-		 /*
-		  * read a file to a string
-		  * replace the third line of the string with ""
-		  * put that string into a file
-		  */
-	
-
-	public void readFile (String fileName) throws IOException, NoSuchAlgorithmException
+	public void changeContents (String fileName) throws IOException, NoSuchAlgorithmException
 	{
 		if (par != null) {
 			BufferedReader reader = new BufferedReader(new FileReader(fileName));
 			String content = "";
 			
-			content += reader.readLine() + "/n";
-			content += reader.readLine() + "/n";
-			content += generateSha1(getContentOfFile());
-			content += reader.readLine() + "/n";
-			content += reader.readLine() + "/n";
-			content += reader.readLine() + "/n";
-			
-			File file = new File ("./objects/" + fileName);
+			content += reader.readLine() + "\n";
+			setCurrentToChildOfParent();
+			content += "\n";
+			content += "objects/" + s;
+			reader.readLine();
+			content += reader.readLine() + "\n";
+			content += reader.readLine() + "\n";
+			content += reader.readLine() + "\n";
+			/*
+			 * I'm writing this current node but I need to find the parent and point it to this current node
+			 * 
+			 */
+			File file = new File ("objects/" + fileName);
 			PrintWriter print = new PrintWriter (file);
 			print.print(content);
 			print.close();
-		}
-		else
-		{
-			return;
-		}
-		
-		/*
-		Path filePath = Paths.get(fileName);
-		String content = Files.readString(filePath);
-		System.out.println (content);
-		return content;
-		*/
-	}
-	/*
-	public String replaceThirdLine (String content)
-	{
-		if (par != null) 
-		{
-			int first = 0;
-			int second = content.indexOf("\n");
-			String temp = "";
-			for (int pos = content.indexOf("\n"); pos != -1; pos = content.indexOf("\n", pos + 1)) 
-			{
-				  second = pos;
-				  if (content.substring(first, second).equals("\n"))
-				  {
-					  temp += "\n";
-					  first = second;
-				  }
-				  else
-				  {
-					  temp += content.substring(first, second);
-					  first = second;
-				  }
-			}
-			content = temp;
+			
+			/*
+			String parSha = par.generateSha1(par.getContentOfFile());
+			System.out.println (parSha);
+			
+			BufferedReader reader2 = new BufferedReader(new FileReader(parSha));
+			content += reader2.readLine() + "\n";
+			reader2.readLine();
+			content += "\n";
+			content += "objects/" + s + "\n";
+			content += reader2.readLine() + "\n";
+			content += reader2.readLine() + "\n";
+			content += reader2.readLine() + "\n";
+			*/
 		}
 		
-		return content;
 	}
-	
-	public void putInFile (String newContent)
-	{
-		 Path p = Paths.get("./objects/temporary.txt");
-	        try {
-	            Files.writeString(p, replaceThirdLine(readFile("temporary.txt")), StandardCharsets.ISO_8859_1);
-	        } catch (IOException e) {
-	            // TODO Auto-generated catch block
-	            e.printStackTrace();
-	        }
-
-	}
-*/
+		
+		
 	public static void main (String [] args) throws IOException, NoSuchAlgorithmException
 	{
 		Commit test1 = new Commit ("summary1", "author1", "Eliza Koblentz", null);
-		System.out.println ("Test 1 content:\n" + test1.getContentOfFile());
-		//Commit test2 = new Commit ("summary2", "author2", "Amelia Koblentz", test1);
+		//System.out.println ("Test 1 content:\n" + test1.getContentOfFile());
+		Commit test2 = new Commit ("summary2", "author2", "Amelia Koblentz", test1);
 		//System.out.println ("Test 2 content:\n" + test2.getContentOfFile());
-		//test1.readFile("temporary.txt");
-		//System.out.println (test1.getContentOfFile());
-		//String read = "Hey there\nMy name is Eliza\nI am a computer\n";
-		//System.out.println(test1.replaceThirdLine(read));
+		
 	}
 	 
 }
