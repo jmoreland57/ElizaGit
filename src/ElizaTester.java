@@ -37,7 +37,7 @@ class ElizaTester {
 		Index g1 = new Index();
 		g1.initialize();
 		
-		File file1 = new File ("index");
+		File file1 = new File ("index.txt");
 		assertTrue(file1.exists());
 		
 		Path path = Paths.get("objects");

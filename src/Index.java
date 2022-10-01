@@ -41,7 +41,8 @@ private HashMap<String, String> hash;
 		    theDir.mkdirs();
 		}
 	}
-	
+//	"flsdfk : lksjdafkldsj"
+//	String[]arr = s.split(" : ")
 	
 	public void addBlobs(String fileName) throws FileNotFoundException, NoSuchAlgorithmException, IOException
 	{
@@ -76,7 +77,7 @@ private HashMap<String, String> hash;
                  hash.entrySet()) {
   
                 // put key and value separated by a colon
-                bf.write(entry.getKey() + ":"
+                bf.write(entry.getKey() + " : "
                          + entry.getValue());
   
                 // new line
@@ -131,7 +132,7 @@ private HashMap<String, String> hash;
                  hash.entrySet()) {
   
                 // put key and value separated by a colon
-                bf.write(entry.getKey() + ":"
+                bf.write(entry.getKey() + " : "
                          + entry.getValue());
   
                 // new line

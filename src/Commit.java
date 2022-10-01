@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -20,19 +21,18 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Commit {
-private String pTree;
+private String ptree;
 
-public String sum;
-public String auth;
-public LocalDate d;
+public String sum; //summary
+public String auth; //author
+public LocalDate d; //date
 
-private Commit par;
-private String oth;
-String s;
+private Commit par; //parents
+private String oth; //child
+String s; //sha
 
 	public Commit(String summary, String author, String pTree, Commit parent) throws IOException, NoSuchAlgorithmException
 	{
-		this.pTree = pTree;
 		sum = summary;
 		auth = author;
 		
@@ -41,14 +41,38 @@ String s;
 		par = parent;
 		oth = null;
 		
-		s = generateSha1(getContentOfFile());
+		s = getFileName();
+		
+		ArrayList<String> treeInitList = getIndex();
+		
+		
 		
 		writeToFile();
-		if (par !=null || oth != null)
+		if (par !=null)
 		{
-			String sha = par.generateSha1(par.getContentOfFile());
-			changeContents(sha);
+//			String sha = par.generateSha1(par.getContentOfFile());
+			changeContents(par.s);
+			treeInitList.add("tree : " + par.getTreePath());
 		}
+		
+		
+		
+		Tree tree = new Tree(treeInitList);
+		ptree = tree.getSha();
+	}
+	
+	public ArrayList<String> getIndex() throws IOException
+	{
+		ArrayList<String> out = new ArrayList<String>();
+		BufferedReader r = new BufferedReader(new FileReader("index.txt"));
+		while (r.ready()) {
+			String[]halves = r.readLine().split(" : ");
+			String add = "blob : ";
+			add += halves[1] + " : ";
+			add += halves[0];
+			out.add(add);
+		}
+		return out;
 	}
 	
 	public LocalDate getDate()
@@ -78,39 +102,44 @@ String s;
 	            return hexStr;
 	        }
 	
+	 
+	public String getFileName() throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		//The inputs for the SHA1 are the SUBSET OF FILE CONTENTS file:
+		//Summary, Date, Author, and (possibly null) pointer to parent Commit file
+		return generateSha1(sum + ", " + d + ", " + auth + "," + par);
+		
+	}
+	 
+	//creates the string of what should go in the current commit file
 	public String getContentOfFile() throws NoSuchAlgorithmException, UnsupportedEncodingException
 	{
 		String content = "";
-		content += ("objects/" + generateSha1(pTree));
+		content += ("objects/" + ptree + "\n");
 		if (par != null)
 		{
-			content += ("\nobjects/" + par.generateSha1(par.getContentOfFile()) + "\n");
+			content += ("objects/" + par.generateSha1(par.getContentOfFile()));
 		}
-		else
-		{
-			content += "\n";
-		}
+		
+		content += "\n";
 			
 		if (oth != null)
 		{
-			content += ("objects/" + s + "\n");
+			content += ("objects/" + s);
 		}
-		else
-		{
-			content += "\n";
-		}
+		
+		content += "\n";
 			
 		content += auth+"\n";
 		content += d +"\n";
-		content +=sum + "\n";
+		content +=sum;
 
 		return content;
 	}
 	
+	//write 
 	public void writeToFile() throws NoSuchAlgorithmException, UnsupportedEncodingException
 	{
-		String sha = generateSha1(getContentOfFile());
-        Path p = Paths.get("objects/" + sha);
+        Path p = Paths.get("objects/" + s);
         
         try {
             Files.writeString(p, getContentOfFile(), StandardCharsets.ISO_8859_1);
@@ -123,7 +152,7 @@ String s;
 	public void changeContents (String fileName) throws IOException, NoSuchAlgorithmException
 	{
 		if (par != null) {
-			BufferedReader reader = new BufferedReader(new FileReader(fileName));
+			BufferedReader reader = new BufferedReader(new FileReader("objects/" + fileName));
 			String content = "";
 			
 			content += reader.readLine() + "\n";
@@ -159,15 +188,12 @@ String s;
 		}
 		
 	}
-		
-		
-	public static void main (String [] args) throws IOException, NoSuchAlgorithmException
-	{
-		Commit test1 = new Commit ("summary1", "author1", "Eliza Koblentz", null);
-		//System.out.println ("Test 1 content:\n" + test1.getContentOfFile());
-		Commit test2 = new Commit ("summary2", "author2", "Amelia Koblentz", test1);
-		//System.out.println ("Test 2 content:\n" + test2.getContentOfFile());
-		
+	
+	public String getTreePath() {
+		return ptree;
 	}
+		
+		
+	
 	 
 }
