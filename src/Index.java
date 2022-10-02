@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,52 +54,60 @@ private HashMap<String, String> hash;
 		String code = blobby.sha1Code(fileName);
 		hash.put(fileName, code);
 		
+		String out = fileName + " : " + code + "\n";
+		
+		try {
+		    Files.write(Paths.get("index"), out.getBytes(), StandardOpenOption.APPEND);
+		}catch (IOException e) {
+		    //exception handling left as an exercise for the reader
+		}
+		
 		/*
 		 * clears the whole file
 		 */
-		 FileWriter fwOb = new FileWriter("index", false); 
-	        PrintWriter pwOb = new PrintWriter(fwOb, false);
-	        pwOb.flush();
-	        pwOb.close();
-	        fwOb.close();
+//		 FileWriter fwOb = new FileWriter("index", false); 
+//	        PrintWriter pwOb = new PrintWriter(fwOb, false);
+//	        pwOb.flush();
+//	        pwOb.close();
+//	        fwOb.close();
 		/*
 		 * takes content of current hashmap and adds it to file
 		 * 
 		 */  
-        BufferedWriter bf = null;
-  
-        try {
-  
-            // create new BufferedWriter for the output file
-            bf = new BufferedWriter(new FileWriter("index"));
-  
-            // iterate map entries
-            for (Map.Entry<String, String> entry :
-                 hash.entrySet()) {
-  
-                // put key and value separated by a colon
-                bf.write(entry.getKey() + " : "
-                         + entry.getValue());
-  
-                // new line
-                bf.newLine();
-            }
-  
-            bf.flush();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally {
-  
-            try {
-  
-                // always close the writer
-                bf.close();
-            }
-            catch (Exception e) {
-            }
-        }
+//        BufferedWriter bf = null;
+//  
+//        try {
+//  
+//            // create new BufferedWriter for the output file
+//            bf = new BufferedWriter(new FileWriter("index"));
+//  
+//            // iterate map entries
+//            for (Map.Entry<String, String> entry :
+//                 hash.entrySet()) {
+//  
+//                // put key and value separated by a colon
+//                bf.write(entry.getKey() + " : "
+//                         + entry.getValue());
+//  
+//                // new line
+//                bf.newLine();
+//            }
+//  
+//            bf.flush();
+//        }
+//        catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        finally {
+//  
+//            try {
+//  
+//                // always close the writer
+//                bf.close();
+//            }
+//            catch (Exception e) {
+//            }
+//        }
     }
 	
 	public void removeBlobs (String fileName) throws IOException
@@ -160,6 +169,10 @@ private HashMap<String, String> hash;
 	public void clear() throws IOException {
 		new FileWriter("index", false).close();
 		hash = new HashMap<String, String>();
+	}
+	
+	public void deleteBlob(String blob) {
+		
 	}
 	
 	public static void main (String [] args) throws FileNotFoundException, NoSuchAlgorithmException, IOException
