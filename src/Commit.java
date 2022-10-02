@@ -51,7 +51,7 @@ String s; //sha
 		if (par !=null)
 		{
 //			String sha = par.generateSha1(par.getContentOfFile());
-			changeContents(par.s);
+//			changeContents(par.s);
 			treeInitList.add("tree : " + par.getTreePath());
 		}
 		
@@ -149,44 +149,62 @@ String s; //sha
         } 
 	}
 	
-	public void changeContents (String fileName) throws IOException, NoSuchAlgorithmException
-	{
-		if (par != null) {
-			BufferedReader reader = new BufferedReader(new FileReader("objects/" + fileName));
-			String content = "";
-			
-			content += reader.readLine() + "\n";
-			setCurrentToChildOfParent();
-			content += "\n";
-			content += "objects/" + s;
-			reader.readLine();
-			content += reader.readLine() + "\n";
-			content += reader.readLine() + "\n";
-			content += reader.readLine() + "\n";
-			/*
-			 * I'm writing this current node but I need to find the parent and point it to this current node
-			 * 
-			 */
-			File file = new File ("objects/" + fileName);
-			PrintWriter print = new PrintWriter (file);
-			print.print(content);
-			print.close();
-			
-			/*
-			String parSha = par.generateSha1(par.getContentOfFile());
-			System.out.println (parSha);
-			
-			BufferedReader reader2 = new BufferedReader(new FileReader(parSha));
-			content += reader2.readLine() + "\n";
-			reader2.readLine();
-			content += "\n";
-			content += "objects/" + s + "\n";
-			content += reader2.readLine() + "\n";
-			content += reader2.readLine() + "\n";
-			content += reader2.readLine() + "\n";
-			*/
-		}
-		
+//	public void changeContents (String fileName) throws IOException, NoSuchAlgorithmException
+//	{
+//		if (par != null) {
+//			BufferedReader reader = new BufferedReader(new FileReader("objects/" + fileName));
+//			String content = "";
+//			
+//			content += reader.readLine() + "\n";
+//			setCurrentToChildOfParent();
+//			content += "\n";
+//			content += "objects/" + s;
+//			reader.readLine();
+//			content += reader.readLine() + "\n";
+//			content += reader.readLine() + "\n";
+//			content += reader.readLine() + "\n";
+//			/*
+//			 * I'm writing this current node but I need to find the parent and point it to this current node
+//			 * 
+//			 */
+//			File file = new File ("objects/" + fileName);
+//			PrintWriter print = new PrintWriter (file);
+//			print.print(content);
+//			print.close();
+//			
+//			/*
+//			String parSha = par.generateSha1(par.getContentOfFile());
+//			System.out.println (parSha);
+//			
+//			BufferedReader reader2 = new BufferedReader(new FileReader(parSha));
+//			content += reader2.readLine() + "\n";
+//			reader2.readLine();
+//			content += "\n";
+//			content += "objects/" + s + "\n";
+//			content += reader2.readLine() + "\n";
+//			content += reader2.readLine() + "\n";
+//			content += reader2.readLine() + "\n";
+//			*/
+//		}
+//		
+//	}
+	
+	private void addCurrentToParent() throws FileNotFoundException {
+		String fileName = "objects/" + par;
+		Path p = Paths.get(fileName);
+		BufferedReader r = new BufferedReader(new FileReader(fileName));
+        try {
+            Files.writeString(p, r.readLine() + r.readLine(), StandardCharsets.ISO_8859_1);
+            Files.writeString(p, "\n" + s + "\n", StandardCharsets.ISO_8859_1);
+            String add = "";
+            for (int i = 0; i < 3; i++) {
+            	add += r.readLine() + "\n";
+            }
+            Files.writeString(p, add, StandardCharsets.ISO_8859_1);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 	}
 	
 	public String getTreePath() {
