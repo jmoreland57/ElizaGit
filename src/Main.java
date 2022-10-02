@@ -8,7 +8,7 @@ public class Main {
 		Index index = new Index();
 		index.initialize();
 		index.addBlobs("Amelia.txt");
-		
+		index.addBlobs("ProgressAndPoverty");
 		Commit test1 = new Commit ("summary1", "author1", "Eliza Koblentz", null);
 		index.clear();
 		//System.out.println ("Test 1 content:\n" + test1.getContentOfFile());
@@ -17,8 +17,13 @@ public class Main {
 		Commit test2 = new Commit ("summary2", "author2", "Amelia Koblentz", test1);
 		index.clear();
 		index.addBlobs("test.txt");
+		index.addBlobs("temporary.txt");
 		//System.out.println ("Test 2 content:\n" + test2.getContentOfFile());
 		Commit test3 = new Commit ("summary3", "author3", "Ava Lastname", test2);
+		index.clear();
+		index.addBlobs("temporary.txt");
+		index.addBlobs("HenryGeorge");
+		Commit test4 = new Commit ("summary4", "author4", "Henry George", test3);
 		
 	}
 
