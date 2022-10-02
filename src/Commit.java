@@ -53,6 +53,7 @@ String s; //sha
 //			String sha = par.generateSha1(par.getContentOfFile());
 //			changeContents(par.s);
 			treeInitList.add("tree : " + par.getTreePath());
+			addCurrentToParent();
 		}
 		
 		
@@ -189,18 +190,13 @@ String s; //sha
 //		
 //	}
 	
-	private void addCurrentToParent() throws FileNotFoundException {
-		String fileName = "objects/" + par;
+	private void addCurrentToParent() throws IOException {
+		String fileName = "objects/" + par.s;
 		Path p = Paths.get(fileName);
 		BufferedReader r = new BufferedReader(new FileReader(fileName));
+		String out = r.readLine() + "\n" + r.readLine() + "\n" + r.readLine() + s + "\n" + r.readLine() + "\n" + r.readLine() + "\n" + r.readLine();
         try {
-            Files.writeString(p, r.readLine() + r.readLine(), StandardCharsets.ISO_8859_1);
-            Files.writeString(p, "\n" + s + "\n", StandardCharsets.ISO_8859_1);
-            String add = "";
-            for (int i = 0; i < 3; i++) {
-            	add += r.readLine() + "\n";
-            }
-            Files.writeString(p, add, StandardCharsets.ISO_8859_1);
+            Files.writeString(p, out, StandardCharsets.ISO_8859_1);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
