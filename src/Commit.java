@@ -47,7 +47,7 @@ String s; //sha
 		
 		
 		
-		writeToFile();
+		
 		if (par !=null)
 		{
 //			String sha = par.generateSha1(par.getContentOfFile());
@@ -60,6 +60,7 @@ String s; //sha
 		
 		Tree tree = new Tree(treeInitList);
 		ptree = tree.getSha();
+		writeToFile();
 	}
 	
 	public ArrayList<String> getIndex() throws IOException
@@ -191,7 +192,7 @@ String s; //sha
 		String fileName = "objects/" + par.s;
 		Path p = Paths.get(fileName);
 		BufferedReader r = new BufferedReader(new FileReader(fileName));
-		String out = r.readLine() + "\n" + r.readLine() + "\n" + r.readLine() + s + "\n" + r.readLine() + "\n" + r.readLine() + "\n" + r.readLine();
+		String out = r.readLine() + "\n" + r.readLine() + "\n" + r.readLine() + "objects/" + s + "\n" + r.readLine() + "\n" + r.readLine() + "\n" + r.readLine();
         try {
             Files.writeString(p, out, StandardCharsets.ISO_8859_1);
         } catch (IOException e) {
