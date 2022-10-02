@@ -25,7 +25,7 @@ private HashMap<String, String> hash;
 		/*
 		 * makes file called index
 		 */
-		 Path p = Paths.get("index.txt");
+		 Path p = Paths.get("index");
 	        try {
 	            Files.writeString(p, "", StandardCharsets.ISO_8859_1);
 	        } catch (IOException e) {
@@ -56,7 +56,7 @@ private HashMap<String, String> hash;
 		/*
 		 * clears the whole file
 		 */
-		 FileWriter fwOb = new FileWriter("index.txt", false); 
+		 FileWriter fwOb = new FileWriter("index", false); 
 	        PrintWriter pwOb = new PrintWriter(fwOb, false);
 	        pwOb.flush();
 	        pwOb.close();
@@ -70,7 +70,7 @@ private HashMap<String, String> hash;
         try {
   
             // create new BufferedWriter for the output file
-            bf = new BufferedWriter(new FileWriter("index.txt"));
+            bf = new BufferedWriter(new FileWriter("index"));
   
             // iterate map entries
             for (Map.Entry<String, String> entry :
@@ -111,7 +111,7 @@ private HashMap<String, String> hash;
 		/*
 		 * clears the whole file
 		 */
-		 FileWriter fwOb = new FileWriter("index.txt", false); 
+		 FileWriter fwOb = new FileWriter("index", false); 
 	        PrintWriter pwOb = new PrintWriter(fwOb, false);
 	        pwOb.flush();
 	        pwOb.close();
@@ -125,7 +125,7 @@ private HashMap<String, String> hash;
         try {
   
             // create new BufferedWriter for the output file
-            bf = new BufferedWriter(new FileWriter("index.txt"));
+            bf = new BufferedWriter(new FileWriter("index"));
   
             // iterate map entries
             for (Map.Entry<String, String> entry :
@@ -156,6 +156,12 @@ private HashMap<String, String> hash;
         }
 		
 	}
+	
+	public void clear() throws IOException {
+		new FileWriter("index", false).close();
+		hash = new HashMap<String, String>();
+	}
+	
 	public static void main (String [] args) throws FileNotFoundException, NoSuchAlgorithmException, IOException
 	{
 		Index test1 = new Index();

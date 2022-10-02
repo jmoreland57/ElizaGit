@@ -65,7 +65,7 @@ String s; //sha
 	public ArrayList<String> getIndex() throws IOException
 	{
 		ArrayList<String> out = new ArrayList<String>();
-		String fileName = "index.txt";
+		String fileName = "index";
 		BufferedReader r = new BufferedReader(new FileReader(fileName));
 		while (r.ready()) {
 			String[]halves = r.readLine().split(" : ");
@@ -74,13 +74,7 @@ String s; //sha
 			add += halves[0];
 			out.add(add);
 		}
-		Path p = Paths.get(fileName);
-		try {
-            Files.writeString(p, "", StandardCharsets.ISO_8859_1);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+		
 		return out;
 	}
 	
@@ -121,7 +115,7 @@ String s; //sha
 		content += ("objects/" + ptree + "\n");
 		if (par != null)
 		{
-			content += ("objects/" + par.generateSha1(par.getContentOfFile()));
+			content += ("objects/" + par.s);
 		}
 		
 		content += "\n";
