@@ -71,7 +71,7 @@ String s; //sha
 		while (r.ready()) {
 			String[]halves = r.readLine().split(" : ");
 			String add = "blob : ";
-			add += halves[1] + " : ";
+			add += halves[1] + " ";
 			add += halves[0];
 			out.add(add);
 		}
