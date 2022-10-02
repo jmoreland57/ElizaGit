@@ -23,6 +23,7 @@ public class Main {
 		index.clear();
 		index.addBlobs("temporary.txt");
 		index.addBlobs("HenryGeorge");
+		index.removeBlobs("temporary.txt");
 		Commit test4 = new Commit ("summary4", "author4", "Henry George", test3);
 		
 	}

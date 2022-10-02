@@ -1,7 +1,9 @@
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -117,52 +119,65 @@ private HashMap<String, String> hash;
 			hash.remove(fileName);
 		}
 		
-		/*
-		 * clears the whole file
-		 */
-		 FileWriter fwOb = new FileWriter("index", false); 
-	        PrintWriter pwOb = new PrintWriter(fwOb, false);
-	        pwOb.flush();
-	        pwOb.close();
-	        fwOb.close();
+		 
+		 BufferedReader r = new BufferedReader(new FileReader("index"));
+		 String out = "";
+		 while (r.ready()) {
+			 String line = r.readLine();
+			 if (!line.contains(fileName)) {
+				 out += (line);
+				 if (r.ready()) { //unsatisfactory but eh
+					 out += ("\n");
+				 }
+			 }
+			 
+		 }
+//	        PrintWriter pwOb = new PrintWriter(fwOb, false);
+//	        pwOb.flush();
+//	        pwOb.close();
+		 FileWriter fwOb = new FileWriter("index", false);
+		 fwOb.append(out);
+	     fwOb.close();
+	     r.close();
 		/*
 		 * takes content of current hashmap and adds it to file
 		 * 
 		 */  
-        BufferedWriter bf = null;
+//        BufferedWriter bf = null;
   
-        try {
-  
+//        try {
+//  
             // create new BufferedWriter for the output file
-            bf = new BufferedWriter(new FileWriter("index"));
-  
+//            bf = new BufferedWriter(new FileWriter("index"));
+//  
             // iterate map entries
-            for (Map.Entry<String, String> entry :
-                 hash.entrySet()) {
-  
-                // put key and value separated by a colon
-                bf.write(entry.getKey() + " : "
-                         + entry.getValue());
-  
-                // new line
-                bf.newLine();
-            }
-  
-            bf.flush();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally {
-  
-            try {
-  
-                // always close the writer
-                bf.close();
-            }
-            catch (Exception e) {
-            }
-        }
+//            for (Map.Entry<String, String> entry :
+//                 hash.entrySet()) {
+//  
+//                // put key and value separated by a colon
+//                bf.write(entry.getKey() + " : "
+//                         + entry.getValue());
+//  
+//                // new line
+//                bf.newLine();
+//            }
+//            
+//  
+//            bf.flush();
+//        }
+//        catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        finally {
+//  
+//            try {
+//  
+//                // always close the writer
+//                bf.close();
+//            }
+//            catch (Exception e) {
+//            }
+//        }
 		
 	}
 	
