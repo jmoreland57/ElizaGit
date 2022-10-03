@@ -112,13 +112,17 @@ private HashMap<String, String> hash;
 //        }
     }
 	
-	public void removeBlobs (String fileName) throws IOException
-	{
+	private void removeBlobFromHashmap(String fileName) {
 		if (hash.containsKey(fileName))
 		{
 			hash.remove(fileName);
 		}
+	}
+	
+	public void removeBlobs (String fileName) throws IOException
+	{
 		
+		removeBlobFromHashmap(fileName);
 		 
 		 BufferedReader r = new BufferedReader(new FileReader("index"));
 		 String out = "";
@@ -186,8 +190,19 @@ private HashMap<String, String> hash;
 		hash = new HashMap<String, String>();
 	}
 	
-	public void deleteBlob(String blob) {
-		
+	public void deleteBlob(String blob) throws IOException {
+		removeBlobFromHashmap(blob);
+		FileWriter fwOb = new FileWriter("index", false);
+		fwOb.append("*deleted* " + blob);
+	    fwOb.close();
+	}
+	
+	public void editBlob(String blob) throws IOException, NoSuchAlgorithmException {
+		removeBlobFromHashmap(blob);
+		FileWriter fwOb = new FileWriter("index", false);
+		fwOb.append("*edited* " + blob);
+	    fwOb.close();
+	    addBlobs(blob);
 	}
 	
 	public static void main (String [] args) throws FileNotFoundException, NoSuchAlgorithmException, IOException

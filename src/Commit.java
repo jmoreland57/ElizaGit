@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -63,19 +64,65 @@ String s; //sha
 		writeToFile();
 	}
 	
-	public ArrayList<String> getIndex() throws IOException
+	public ArrayList<String> getIndex() throws IOException, NoSuchAlgorithmException
 	{
 		ArrayList<String> out = new ArrayList<String>();
-		String fileName = "index";
-		BufferedReader r = new BufferedReader(new FileReader(fileName));
+		String readName = "index";
+		BufferedReader r = new BufferedReader(new FileReader(readName));
 		while (r.ready()) {
-			String[]halves = r.readLine().split(" : ");
-			String add = "blob : ";
-			add += halves[1] + " ";
-			add += halves[0];
-			out.add(add);
+			String line = r.readLine();
+			ArrayList<String> deletees = new ArrayList<String>();
+			if (line.charAt(0)=='*') { //handles edits & deletions
+				String[]halves = line.split("ted* ");
+				String fileName = halves[1];
+				String oldFileSha = generateSha1(fileName);
+				deletees.add(oldFileSha);
+				if (halves[0].equals("edit")) { //handles adding edited file with new corrected sha
+					Path p = Paths.get("objects/" + oldFileSha);
+					String newFileSha = Files.readString(p);
+					out.add("blob : " + newFileSha + " " + fileName);
+				}
+			}
+			else {
+				out.add(reformatBlob(line));
+			}
+			
 		}
-		
+		r.close();
+		return out;
+	}
+	
+	private ArrayList<String> handleDeletions(ArrayList<String> deletees) throws IOException{ //returns all blobs created after the first file being deleted was originally created, plus the last untainted tree (immediately before the oldest file being deleted now was created originally)
+		String tree = ptree;
+		ArrayList<String> out = new ArrayList<String>();
+		while (!deletees.isEmpty()) { //keeps going through older and older trees until it's found all deletees
+			BufferedReader r = new BufferedReader(new FileReader("objects/" + tree));
+			String line = r.readLine();
+			while (line.charAt(0)=='b') { //keeps going until it encounters a tree listing (which should be found last)
+				boolean isDeletee = false;
+				for (int i = 0; i < deletees.size(); i++) { //loops through all remaining deletees
+					String deletee = deletees.get(i);
+					if (line.substring(7,47).equals(deletee)) { //sees if current deletee is found on current line
+						isDeletee = true;
+					}
+				}
+				if (isDeletee == false) {
+					out.add(reformatBlob(line));
+				}
+				line = r.readLine();
+			}
+			tree = line.substring(7,47);
+			r.close();
+		}
+		out.add("tree : " + tree);
+		return out;
+	}
+	
+	private String reformatBlob (String old) { //reformats a line from how it appears in index (filename : hashcode) to how it appears in tree (blob : hashcode filename)
+		String[]halves = old.split(" : ");
+		String out = "blob : ";
+		out += halves[1] + " ";
+		out += halves[0];
 		return out;
 	}
 	
