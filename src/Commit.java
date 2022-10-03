@@ -53,7 +53,7 @@ String s; //sha
 		{
 //			String sha = par.generateSha1(par.getContentOfFile());
 //			changeContents(par.s);
-			treeInitList.add("tree : " + par.getTreePath());
+//			
 			addCurrentToParent();
 		}
 		
@@ -69,10 +69,11 @@ String s; //sha
 		ArrayList<String> out = new ArrayList<String>();
 		String readName = "index";
 		BufferedReader r = new BufferedReader(new FileReader(readName));
+		ArrayList<String> deletees = new ArrayList<String>();
+		boolean hasEdits = false;
 		while (r.ready()) {
 			String line = r.readLine();
-			ArrayList<String> deletees = new ArrayList<String>();
-			if (line.charAt(0)=='*') { //handles edits & deletions
+			if (line.charAt(0)=='*') { //handles new material for edits and deletions (recording deleted file names and adding new entries for edited files)
 				String[]halves = line.split("ted* ");
 				String fileName = halves[1];
 				String oldFileSha = generateSha1(fileName);
@@ -82,12 +83,19 @@ String s; //sha
 					String newFileSha = Files.readString(p);
 					out.add("blob : " + newFileSha + " " + fileName);
 				}
+				hasEdits = true;
 			}
 			else {
 				out.add(reformatBlob(line));
 			}
-			
 		}
+		
+		if (!hasEdits) {
+			out.add("tree : " + par.getTreePath());
+		}
+		
+		out.addAll(handleDeletions(deletees));
+		
 		r.close();
 		return out;
 	}
