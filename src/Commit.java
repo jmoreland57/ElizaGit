@@ -90,18 +90,20 @@ String s; //sha
 			}
 		}
 		
-		if (!hasEdits) {
-			out.add("tree : " + par.getTreePath());
-		}
+//		if ((!hasEdits) && (par != null)) {
+//			out.add("tree : " + par.getTreePath());
+//		}
 		
-		out.addAll(handleDeletions(deletees));
+		if (par != null) {
+			out.addAll(handleDeletions(deletees));
+		}
 		
 		r.close();
 		return out;
 	}
 	
 	private ArrayList<String> handleDeletions(ArrayList<String> deletees) throws IOException{ //returns all blobs created after the first file being deleted was originally created, plus the last untainted tree (immediately before the oldest file being deleted now was created originally)
-		String tree = ptree;
+		String tree = par.getTreePath();
 		ArrayList<String> out = new ArrayList<String>();
 		while (!deletees.isEmpty()) { //keeps going through older and older trees until it's found all deletees
 			BufferedReader r = new BufferedReader(new FileReader("objects/" + tree));
