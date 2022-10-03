@@ -191,18 +191,27 @@ private HashMap<String, String> hash;
 	}
 	
 	public void deleteBlob(String blob) throws IOException {
-		removeBlobFromHashmap(blob);
-		FileWriter fwOb = new FileWriter("index", false);
-		fwOb.append("*deleted* " + blob);
-	    fwOb.close();
+	    Path filePath = Path.of("index");
+	    String content = Files.readString(filePath);
+	    Path p = Paths.get("index");
+        try {
+            Files.writeString(p, content + "\n*deleted* " + blob, StandardCharsets.ISO_8859_1);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 	}
 	
 	public void editBlob(String blob) throws IOException, NoSuchAlgorithmException {
-		removeBlobFromHashmap(blob);
-		FileWriter fwOb = new FileWriter("index", false);
-		fwOb.append("*edited* " + blob);
-	    fwOb.close();
-	    addBlobs(blob);
+		Path filePath = Path.of("index");
+	    String content = Files.readString(filePath);
+	    Path p = Paths.get("index");
+        try {
+            Files.writeString(p, content + "\n*edited* " + blob, StandardCharsets.ISO_8859_1);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 	}
 	
 	public static void main (String [] args) throws FileNotFoundException, NoSuchAlgorithmException, IOException

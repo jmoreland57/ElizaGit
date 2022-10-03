@@ -74,11 +74,11 @@ String s; //sha
 		while (r.ready()) {
 			String line = r.readLine();
 			if (line.charAt(0)=='*') { //handles new material for edits and deletions (recording deleted file names and adding new entries for edited files)
-				String[]halves = line.split("ted* ");
+				String[]halves = line.split("d* ");
 				String fileName = halves[1];
 				String oldFileSha = generateSha1(fileName);
-				deletees.add(oldFileSha);
-				if (halves[0].equals("edit")) { //handles adding edited file with new corrected sha
+				deletees.add(fileName);
+				if (halves[0].equals("*edited*")) { //handles adding edited file with new corrected sha
 					Path p = Paths.get("objects/" + oldFileSha);
 					String newFileSha = Files.readString(p);
 					out.add("blob : " + newFileSha + " " + fileName);
@@ -112,12 +112,14 @@ String s; //sha
 				boolean isDeletee = false;
 				for (int i = 0; i < deletees.size(); i++) { //loops through all remaining deletees
 					String deletee = deletees.get(i);
-					if (line.substring(7,47).equals(deletee)) { //sees if current deletee is found on current line
+					if (line.substring(48, 48 + deletee.length()).equals(deletee)) { //sees if current deletee is found on current line
 						isDeletee = true;
+						deletees.remove(i);
+						i--;
 					}
 				}
 				if (isDeletee == false) {
-					out.add(reformatBlob(line));
+					out.add(line);
 				}
 				line = r.readLine();
 			}
