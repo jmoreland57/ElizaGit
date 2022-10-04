@@ -26,7 +26,7 @@ class BPartTester {
 		git.Commit("s2", "a2");
 		git.addBlob("temporary.txt");
 		git.addBlob("HenryGeorge");
-		git.Commit("s3", "a");
+		git.Commit("s3", "a3");
 		git.addBlob("test.txt");
 		git.deleteBlob("HenryGeorge");
 		git.addBlob("Eliza.txt");
@@ -50,8 +50,25 @@ class BPartTester {
 	@Test
 	void testGit1() throws IOException {
 		System.out.println("a1\n2022-10-4\ns1");
-		assertTrue(checkIfFileContains("a1\n2022-10-4\ns1"));
-		
+		assertTrue(checkIfFileContains("a1\n2022-10-04\ns1"));
+	}
+	
+	@Test
+	void testGit2() throws IOException {
+		System.out.println("a1\n2022-10-4\ns1");
+		assertTrue(checkIfFileContains("a2\n2022-10-04\ns2"));
+	}
+	
+	@Test
+	void testGit3() throws IOException {
+		System.out.println("a1\n2022-10-4\ns1");
+		assertTrue(checkIfFileContains("a3\n2022-10-04\ns3"));
+	}
+	
+	@Test
+	void testGit4() throws IOException {
+		System.out.println("a1\n2022-10-4\ns1");
+		assertTrue(checkIfFileContains("a4\n2022-10-04\ns4"));
 	}
 	
 	@Test

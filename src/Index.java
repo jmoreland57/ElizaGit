@@ -38,7 +38,7 @@ private HashMap<String, String> hash;
 		/*
 		 * make directory
 		 */
-		File theDir = new File("/path/objects");
+		File theDir = new File("objects");
 		if (!theDir.exists())
 		{
 		    theDir.mkdirs();
