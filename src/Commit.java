@@ -99,7 +99,7 @@ String s; //sha
 //			out.add("tree : " + par.getTreePath());
 //		}
 		
-		if (par != null) {
+		if (ppar.equals("")) {
 			out.addAll(handleDeletions(deletees));
 		}
 		
@@ -108,7 +108,7 @@ String s; //sha
 	}
 	
 	private ArrayList<String> handleDeletions(ArrayList<String> deletees) throws IOException{ //returns all blobs created after the first file being deleted was originally created, plus the last untainted tree (immediately before the oldest file being deleted now was created originally)
-		String tree = par.getTreePath();
+		String tree = ppar;
 		ArrayList<String> out = new ArrayList<String>();
 		while (!deletees.isEmpty()) { //keeps going through older and older trees until it's found all deletees
 			BufferedReader r = new BufferedReader(new FileReader("objects/" + tree));
