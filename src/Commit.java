@@ -29,6 +29,7 @@ public String auth; //author
 public LocalDate d; //date
 
 private Commit par; //parents
+private String ppar; //parent path / hash code
 private String oth; //child
 String s; //sha
 
@@ -45,18 +46,20 @@ String s; //sha
 		
 		s = getFileName();
 		
+		ppar = Files.readString(Path.of("HEAD"));
+		
 		ArrayList<String> treeInitList = getIndex();
 		
 		
 		
 		
-		if (par !=null)
-		{
+//		if (par !=null)
+//		{
 //			String sha = par.generateSha1(par.getContentOfFile());
 //			changeContents(par.s);
 //			
 			addCurrentToParent();
-		}
+//		}
 		
 		
 		
@@ -175,9 +178,9 @@ String s; //sha
 	{
 		String content = "";
 		content += ("objects/" + ptree + "\n");
-		if (par != null)
+		if (!ppar.equals(""))
 		{
-			content += ("objects/" + par.s);
+			content += ("objects/" + ppar);
 		}
 		
 		content += "\n";
@@ -250,17 +253,21 @@ String s; //sha
 //	}
 	
 	private void addCurrentToParent() throws IOException {
-		String fileName = "objects/" + par.s;
-		Path p = Paths.get(fileName);
-		BufferedReader r = new BufferedReader(new FileReader(fileName));
-		String out = r.readLine() + "\n" + r.readLine() + "\n" + r.readLine() + "objects/" + s + "\n" + r.readLine() + "\n" + r.readLine() + "\n" + r.readLine();
-        try {
-            Files.writeString(p, out, StandardCharsets.ISO_8859_1);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        par.oth = s;
+		if (!ppar.equals("")) {
+			String fileName = "objects/" + ppar;
+			Path p = Paths.get(fileName);
+			BufferedReader r = new BufferedReader(new FileReader(fileName));
+			String out = r.readLine() + "\n" + r.readLine() + "\n" + r.readLine() + "objects/" + s + "\n" + r.readLine() + "\n" + r.readLine() + "\n" + r.readLine();
+	        try {
+	            Files.writeString(p, out, StandardCharsets.ISO_8859_1);
+	        } catch (IOException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        }
+//	        par.oth = s;
+	        r.close();
+		}
+		
 	}
 	
 	public String getTreePath() {
