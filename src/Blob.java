@@ -40,7 +40,7 @@ import java.io.PrintWriter;
 			
 			read.close();
 			
-			Path filePathToWrite = Paths.get("/Users/elizakoblentz/eclipse-workspace/GitPrerequisite/objects/" + nameOfFile); 
+			Path filePathToWrite = Paths.get("objects/" + nameOfFile); 
 	    	try {
 	    		Files.writeString(filePathToWrite, contentOfFile, StandardCharsets.ISO_8859_1);
 	    	} catch (IOException exception) {

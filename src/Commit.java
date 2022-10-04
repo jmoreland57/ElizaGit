@@ -79,7 +79,8 @@ String s; //sha
 				String oldFileSha = generateSha1(fileName);
 				deletees.add(fileName);
 				if (halves[0].equals("*edited*")) { //handles adding edited file with new corrected sha
-					Path p = Paths.get("objects/" + oldFileSha);
+					Blob blobby = new Blob (fileName); //THINK THIS IS WRONG GO TO THEISS
+					Path p = Paths.get("objects/" + blobby.sha1Code(fileName));
 					String newFileSha = Files.readString(p);
 					out.add("blob : " + newFileSha + " " + fileName);
 				}
