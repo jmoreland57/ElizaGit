@@ -51,18 +51,28 @@ public class Main {
 		Git git = new Git();
 		git.addBlob("Amelia.txt");
 		git.addBlob("ProgressAndPoverty");
-		git.Commit("1 added gamers", "eliza wooooo");
+		git.Commit("s1", "a1");
 		git.addBlob("Ava.txt");
 		git.addBlob("notes.txt");
-		git.Commit("2 less interesting files", "elliot licthament");
+		git.Commit("s2", "a2");
+		Path p = Paths.get("Amelia.txt");
+	        try {
+	            Files.writeString(p, "new amieowjfioewjfnweuqo", StandardCharsets.ISO_8859_1);
+	        } catch (IOException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        }
+		git.editBlob("Amelia.txt");
 		git.addBlob("temporary.txt");
 		git.addBlob("HenryGeorge");
-		git.Commit("3 drug dealer type beat", "the main man");
+		git.Commit("s3", "a3");
 		git.addBlob("test.txt");
 		git.deleteBlob("HenryGeorge");
 		git.addBlob("Eliza.txt");
-		git.Commit("4 deleted my boy, added somf iles", "a pure unadulterated sicko");
-		
+		git.Commit("s4", "a4");
+		git.addBlob("index.txt");
+		git.Commit("s5,", "a5");
 	}
+		
 
 }

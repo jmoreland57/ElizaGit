@@ -3,8 +3,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
@@ -26,6 +28,14 @@ class BPartTester {
 		git.addBlob("Ava.txt");
 		git.addBlob("notes.txt");
 		git.Commit("s2", "a2");
+		Path p = Paths.get("objects/Amelia.txt");
+	        try {
+	            Files.writeString(p, "new amieowjfioewjfnweuqo", StandardCharsets.ISO_8859_1);
+	        } catch (IOException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        }
+		git.editBlob("Amelia.txt");
 		git.addBlob("temporary.txt");
 		git.addBlob("HenryGeorge");
 		git.Commit("s3", "a3");
@@ -33,6 +43,8 @@ class BPartTester {
 		git.deleteBlob("HenryGeorge");
 		git.addBlob("Eliza.txt");
 		git.Commit("s4", "a4");
+		git.addBlob("index.txt");
+		git.Commit("s5,", "a5");
 		commits = git.getCommits();
 	}
 
