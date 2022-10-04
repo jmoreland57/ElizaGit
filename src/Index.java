@@ -195,7 +195,7 @@ private HashMap<String, String> hash;
 	    String content = Files.readString(filePath);
 	    Path p = Paths.get("index");
         try {
-            Files.writeString(p, content + "\n*deleted* " + blob, StandardCharsets.ISO_8859_1);
+            Files.writeString(p, content + "*deleted* " + blob + "\n", StandardCharsets.ISO_8859_1);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -32,6 +32,7 @@ private Commit par; //parents
 private String oth; //child
 String s; //sha
 
+	//commits something; the existence of ptree and parent are not needed as their initialization in the constructor is deprecated and superceded by use of head
 	public Commit(String summary, String author, String pTree, Commit parent) throws IOException, NoSuchAlgorithmException
 	{
 		sum = summary;
@@ -79,7 +80,7 @@ String s; //sha
 				String oldFileSha = generateSha1(fileName);
 				deletees.add(fileName);
 				if (halves[0].equals("*edited*")) { //handles adding edited file with new corrected sha
-					Blob blobby = new Blob (fileName); //THINK THIS IS WRONG GO TO THEISS
+					Blob blobby = new Blob (fileName); 
 					Path p = Paths.get("objects/" + blobby.sha1Code(fileName));
 					String newFileSha = Files.readString(p);
 					out.add("blob : " + newFileSha + " " + fileName);
