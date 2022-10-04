@@ -1,6 +1,11 @@
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,6 +18,19 @@ class BPartTester {
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
 		git = new Git();
+		git.addBlob("Amelia.txt");
+		git.addBlob("ProgressAndPoverty");
+		git.Commit("s1", "a1");
+		git.addBlob("Ava.txt");
+		git.addBlob("notes.txt");
+		git.Commit("s2", "a2");
+		git.addBlob("temporary.txt");
+		git.addBlob("HenryGeorge");
+		git.Commit("s3", "a");
+		git.addBlob("test.txt");
+		git.deleteBlob("HenryGeorge");
+		git.addBlob("Eliza.txt");
+		git.Commit("s4", "a4");
 	}
 
 	@AfterAll
@@ -30,8 +48,32 @@ class BPartTester {
 	}
 
 	@Test
-	void test() {
+	void testGit1() throws IOException {
+		System.out.println("a1\n2022-10-4\ns1");
+		assertTrue(checkIfFileContains("a1\n2022-10-4\ns1"));
+		
+	}
+	
+	@Test
+	void test() throws FileNotFoundException, NoSuchAlgorithmException, IOException {
 		fail("Not yet implemented");
+		
+	}
+	
+	private boolean checkIfFileContains(String text) throws IOException {
+		File objects = new File("objects");
+		File[] allContents = objects.listFiles();
+		boolean out = false;
+	    if (allContents != null) {
+	        for (File file : allContents) {
+	            file.getPath();
+	            String content = Files.readString(Path.of(file.getPath()));
+	            if (content.contains(text)) {
+	            	out = true;
+	            }
+	        }
+	    }
+	    return out;
 	}
 
 }

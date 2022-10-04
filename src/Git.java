@@ -5,13 +5,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 public class Git {
 
 	private Index index;
+	private ArrayList<Commit> commits;
 	
 	//creates the git objects
 	public Git() {
+		commits = new ArrayList<Commit>();
 		index = new Index();
 		index.initialize();
 		Path p = Paths.get("HEAD");
@@ -25,7 +28,7 @@ public class Git {
 	
 	public boolean Commit(String summary, String author) throws NoSuchAlgorithmException, IOException {
 		Commit commit = new Commit(summary, author, "If you're reading this, you're having a big problem", null);
-		
+		commits.add(commit);
 		Path p = Paths.get("HEAD");
         try {
             Files.writeString(p, commit.s, StandardCharsets.ISO_8859_1);
@@ -57,5 +60,9 @@ public class Git {
 	//delete a blob if it was previously committed
 	public void deleteBlob(String fileName) throws IOException {
 		index.deleteBlob(fileName);
+	}
+	
+	public ArrayList<Commit> getCommits(){
+		return commits;
 	}
 }

@@ -51,7 +51,7 @@ public class Tree {
         }
 		
 		
-		FileWriter writer = new FileWriter(new File("./objects", shaCode));
+		FileWriter writer = new FileWriter(new File("objects/" + shaCode));
         int size = list.size();
         for (int i=0;i<size;i++) {
             String str = list.get(i).toString();

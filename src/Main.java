@@ -59,7 +59,6 @@ public class Main {
 		git.addBlob("HenryGeorge");
 		git.Commit("3 drug dealer type beat", "the main man");
 		git.addBlob("test.txt");
-//		git.removeBlob("Eliza.txt");
 		git.deleteBlob("HenryGeorge");
 		git.addBlob("Eliza.txt");
 		git.Commit("4 deleted my boy, added somf iles", "a pure unadulterated sicko");
