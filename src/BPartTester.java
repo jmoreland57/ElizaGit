@@ -79,6 +79,7 @@ class BPartTester {
 		assertTrue(checkIfFileContains(commits.get(0).getTreePath() + "\n\n" + commits.get(1).s));
 	}
 	
+	
 	@Test
 	void testTree2() throws IOException {
 		assertTrue(checkIfFileContains(commits.get(1).getTreePath()));
