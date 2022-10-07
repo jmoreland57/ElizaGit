@@ -86,7 +86,7 @@ String s; //sha
 				if (halves[0].equals("*edited*")) { //handles adding edited file with new corrected sha
 					Blob blobby = new Blob (fileName); 
 					Path p = Paths.get("objects/" + blobby.sha1Code(fileName));
-					String newFileSha = Files.readString(p);
+					String newFileSha = generateSha1(Files.readString(p));
 					out.add("blob : " + newFileSha + " " + fileName);
 				}
 				hasEdits = true;
@@ -134,13 +134,13 @@ String s; //sha
 				line = rtree.readLine();
 			}
 			
-			if (line!=null) {
+			if (line!=null) { //check for if we're in the first commit
 				ptree = line.substring(15);
 			}
 			else {
-				ptree = "";
+				ptree = ""; //this will tell the writeFile method not to print anything for this commit's tree's parent tree
 			}
-			if (ptree.length() == 39) {
+			if (ptree.length() == 39) { //this fixes a weird carriage return bug
 				ptree = "" + line.charAt(7) + ptree;
 			}
 			rtree.close();
@@ -149,7 +149,7 @@ String s; //sha
 				ppar = potentialParent.substring(8);
 			}
 			else {
-				ppar = "";
+				ppar = ""; //this will tell the writeFile method not to print anything for this commit's parent
 			}
 			
 			rcommit.close();
