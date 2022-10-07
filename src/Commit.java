@@ -53,6 +53,7 @@ String s; //sha
 		
 		
 		
+		
 //		if (par !=null)
 //		{
 //			String sha = par.generateSha1(par.getContentOfFile());
@@ -99,7 +100,7 @@ String s; //sha
 //			out.add("tree : " + par.getTreePath());
 //		}
 		
-		if (ppar.equals("")) {
+		if (!ppar.equals("")) {
 			out.addAll(handleDeletions(deletees));
 		}
 		
@@ -108,16 +109,20 @@ String s; //sha
 	}
 	
 	private ArrayList<String> handleDeletions(ArrayList<String> deletees) throws IOException{ //returns all blobs created after the first file being deleted was originally created, plus the last untainted tree (immediately before the oldest file being deleted now was created originally)
-		String tree = ppar;
+		String commit = "objects/" + ppar;
+		BufferedReader treeGetter = new BufferedReader(new FileReader(commit));
+		String ptree = treeGetter.readLine().substring(8);
 		ArrayList<String> out = new ArrayList<String>();
 		while (!deletees.isEmpty()) { //keeps going through older and older trees until it's found all deletees
-			BufferedReader r = new BufferedReader(new FileReader("objects/" + tree));
-			String line = r.readLine();
-			while (line.charAt(0)=='b') { //keeps going until it encounters a tree listing (which should be found last)
+			commit = "objects/" + ppar;
+			BufferedReader rcommit = new BufferedReader(new FileReader(commit));
+			BufferedReader rtree = new BufferedReader(new FileReader(rcommit.readLine()));
+			String line = rtree.readLine();
+			while (line!=null && line.charAt(0)=='b') { //keeps going until it encounters a tree listing (which should be found last)
 				boolean isDeletee = false;
 				for (int i = 0; i < deletees.size(); i++) { //loops through all remaining deletees
 					String deletee = deletees.get(i);
-					if (line.substring(48, 48 + deletee.length()).equals(deletee)) { //sees if current deletee is found on current line
+					if (line.length()>=48+deletee.length() && line.substring(48, 48 + deletee.length()).equals(deletee)) { //sees if current deletee is found on current line
 						isDeletee = true;
 						deletees.remove(i);
 						i--;
@@ -126,12 +131,34 @@ String s; //sha
 				if (isDeletee == false) {
 					out.add(line);
 				}
-				line = r.readLine();
+				line = rtree.readLine();
 			}
-			tree = line.substring(7,47);
-			r.close();
+			
+			if (line!=null) {
+				ptree = line.substring(15);
+			}
+			else {
+				ptree = "";
+			}
+			if (ptree.length() == 39) {
+				ptree = "" + line.charAt(7) + ptree;
+			}
+			rtree.close();
+			String potentialParent = rcommit.readLine();
+			if (potentialParent.length()!=0) { //check for if we're currently not in the first commit
+				ppar = potentialParent.substring(8);
+			}
+			else {
+				ppar = "";
+			}
+			
+			rcommit.close();
 		}
-		out.add("tree : " + tree);
+		if (!ptree.equals("")) { //check for if we're currently not in the first commit
+			out.add("tree : " + ptree);
+		}
+		
+		
 		return out;
 	}
 	
@@ -254,18 +281,24 @@ String s; //sha
 	
 	private void addCurrentToParent() throws IOException {
 		if (!ppar.equals("")) {
-			String fileName = "objects/" + ppar;
-			Path p = Paths.get(fileName);
-			BufferedReader r = new BufferedReader(new FileReader(fileName));
-			String out = r.readLine() + "\n" + r.readLine() + "\n" + r.readLine() + "objects/" + s + "\n" + r.readLine() + "\n" + r.readLine() + "\n" + r.readLine();
-	        try {
-	            Files.writeString(p, out, StandardCharsets.ISO_8859_1);
-	        } catch (IOException e) {
-	            // TODO Auto-generated catch block
-	            e.printStackTrace();
-	        }
-//	        par.oth = s;
-	        r.close();
+//			String fileName = ppar;
+//			Path p = Paths.get(fileName);
+//			BufferedReader r = new BufferedReader(new FileReader("objects/" + fileName));
+//			String out = r.readLine() + "\n" + r.readLine() + "\n" + r.readLine() + "objects/" + s + "\n" + r.readLine() + "\n" + r.readLine() + "\n" + r.readLine();
+//	        try {
+//	        	System.out.println(out);
+//	            Files.writeString(p, out, StandardCharsets.ISO_8859_1);
+//	        } catch (IOException e) {
+//	            // TODO Auto-generated catch block
+//	            e.printStackTrace();
+//	            System.out.println("fail");
+//	        }
+////	        par.oth = s;
+//	        r.close();
+			Path path = Paths.get("objects/" + ppar);
+		    List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+		    lines.set(2, "objects/" + s);
+		    Files.write(path, lines, StandardCharsets.UTF_8);
 		}
 		
 	}

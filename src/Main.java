@@ -62,7 +62,7 @@ public class Main {
 	            // TODO Auto-generated catch block
 	            e.printStackTrace();
 	        }
-//		git.editBlob("Amelia.txt")
+		git.editBlob("Amelia.txt");
 		git.addBlob("temporary.txt");
 		git.addBlob("HenryGeorge");
 		git.Commit("s3", "a3");
